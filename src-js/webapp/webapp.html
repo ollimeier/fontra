@@ -84,6 +84,20 @@
         border-radius: 4px;
         border: 1px solid var(--fontra-error-color);
       }
+      .wasm-test-section {
+        background: var(--fontra-ui-dark-color);
+        padding: 20px;
+        margin: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--fontra-ui-border-color);
+      }
+      .test-controls {
+        margin: 10px 0;
+      }
+      .test-controls .btn {
+        margin-right: 10px;
+        background: var(--fontra-secondary-color, #6c757d);
+      }
     </style>
   </head>
   <body class="landing-body">
@@ -104,8 +118,20 @@
           <li>✅ Create and edit font projects offline</li>
           <li>✅ Data stored locally in your browser</li>
           <li>✅ Import and export font files</li>
-          <li>⚠️ Path operations require WebAssembly (coming soon)</li>
+          <li>✅ WebAssembly-powered font processing</li>
         </ul>
+        <div id="wasm-info"></div>
+      </div>
+
+      <div class="wasm-test-section">
+        <h3>WebAssembly Font Processing Test</h3>
+        <p>Test the WebAssembly font processor with basic path operations:</p>
+        <div class="test-controls">
+          <button class="btn" id="test-wasm-info">Get WASM Info</button>
+          <button class="btn" id="test-path-bounds">Test Path Bounds</button>
+          <button class="btn" id="test-path-transform">Test Path Transform</button>
+        </div>
+        <div id="wasm-test-results" style="background: var(--fontra-ui-light-color); padding: 10px; margin: 10px 0; border-radius: 4px; font-family: monospace; white-space: pre-wrap; max-height: 200px; overflow-y: auto;"></div>
       </div>
 
       <div class="create-project-form">

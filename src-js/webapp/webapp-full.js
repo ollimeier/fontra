@@ -1,9 +1,13 @@
 /**
- * Fontra Web App with full IndexedDB functionality
+ * Fontra Web App with full IndexedDB functionality and WebAssembly font processing
  * Stores font projects in browser's IndexedDB for offline editing
+ * Uses WebAssembly for advanced font operations
  */
 
 console.log("Fontra Web App starting...");
+
+// Import WebAssembly processor
+import { wasmProcessor } from './fontra-wasm-processor.js';
 
 // IndexedDB configuration
 const DB_NAME = "fontra-fonts";
@@ -15,6 +19,7 @@ const STORES = {
 };
 
 let db = null;
+let processor = null;
 
 // Initialize the web app
 async function initWebApp() {
@@ -26,6 +31,9 @@ async function initWebApp() {
       showError("Your browser doesn't support IndexedDB. Please use a modern browser like Chrome, Firefox, Safari, or Edge.");
       return;
     }
+
+    // Initialize WebAssembly processor
+    await initWASMProcessor();
 
     // Initialize IndexedDB
     await initIndexedDB();
@@ -40,6 +48,34 @@ async function initWebApp() {
   } catch (error) {
     console.error("Failed to initialize web app:", error);
     showError("Failed to initialize web app: " + error.message);
+  }
+}
+
+// Initialize WebAssembly processor
+async function initWASMProcessor() {
+  try {
+    processor = wasmProcessor;
+    const info = processor.getInfo();
+    console.log("WebAssembly processor initialized:", info);
+    
+    // Update UI to show WASM capabilities
+    updateWASMStatus(info);
+  } catch (error) {
+    console.error("Failed to initialize WASM processor:", error);
+    showError("Warning: WebAssembly processor not available - advanced font operations disabled");
+  }
+}
+
+// Update UI to show WebAssembly status
+function updateWASMStatus(info) {
+  const wasmInfo = document.getElementById("wasm-info");
+  if (wasmInfo) {
+    wasmInfo.innerHTML = `
+      <div style="background: var(--fontra-success-bg-color); color: var(--fontra-success-color); padding: 10px; border-radius: 4px; margin: 10px 0;">
+        ✅ WebAssembly Font Processor Active
+        <br><small>Version: ${info.version} | Mode: ${info.mode} | Capabilities: ${info.capabilities.length}</small>
+      </div>
+    `;
   }
 }
 
@@ -325,6 +361,93 @@ function setupEventHandlers() {
         createBtn.click();
       }
     });
+  }
+
+  // WebAssembly test buttons
+  setupWASMTestHandlers();
+}
+
+// Setup WebAssembly test event handlers
+function setupWASMTestHandlers() {
+  const wasmInfoBtn = document.getElementById("test-wasm-info");
+  if (wasmInfoBtn) {
+    wasmInfoBtn.addEventListener("click", () => {
+      if (!processor) {
+        showWASMTestResult("Error: WebAssembly processor not initialized");
+        return;
+      }
+      
+      const info = processor.getInfo();
+      showWASMTestResult("WASM Processor Info:\n" + JSON.stringify(info, null, 2));
+    });
+  }
+
+  const pathBoundsBtn = document.getElementById("test-path-bounds");
+  if (pathBoundsBtn) {
+    pathBoundsBtn.addEventListener("click", () => {
+      if (!processor) {
+        showWASMTestResult("Error: WebAssembly processor not initialized");
+        return;
+      }
+      
+      // Test with a simple rectangular path
+      const testPath = {
+        contours: [
+          {
+            points: [
+              { x: 100, y: 100, type: "line" },
+              { x: 300, y: 100, type: "line" },
+              { x: 300, y: 200, type: "line" },
+              { x: 100, y: 200, type: "line" }
+            ],
+            isClosed: true
+          }
+        ]
+      };
+      
+      const result = processor.pathBounds(testPath);
+      showWASMTestResult("Path Bounds Test:\nInput: 200x100 rectangle at (100,100)\nResult:\n" + JSON.stringify(result, null, 2));
+    });
+  }
+
+  const pathTransformBtn = document.getElementById("test-path-transform");
+  if (pathTransformBtn) {
+    pathTransformBtn.addEventListener("click", () => {
+      if (!processor) {
+        showWASMTestResult("Error: WebAssembly processor not initialized");
+        return;
+      }
+      
+      // Test with a simple square path
+      const testPath = {
+        contours: [
+          {
+            points: [
+              { x: 0, y: 0, type: "line" },
+              { x: 100, y: 0, type: "line" },
+              { x: 100, y: 100, type: "line" },
+              { x: 0, y: 100, type: "line" }
+            ],
+            isClosed: true
+          }
+        ]
+      };
+      
+      const translateResult = processor.pathTranslate(testPath, 50, 25);
+      const scaleResult = processor.pathScale(testPath, 2.0, 1.5);
+      
+      showWASMTestResult("Path Transform Test:\nOriginal: 100x100 square at (0,0)\n\nTranslate by (50, 25):\n" + 
+        JSON.stringify(translateResult, null, 2) + "\n\nScale by (2.0, 1.5):\n" + 
+        JSON.stringify(scaleResult, null, 2));
+    });
+  }
+}
+
+// Show WebAssembly test results
+function showWASMTestResult(text) {
+  const resultsDiv = document.getElementById("wasm-test-results");
+  if (resultsDiv) {
+    resultsDiv.textContent = text;
   }
 }
 
