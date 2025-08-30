@@ -4,7 +4,6 @@
  */
 
 import { getBackend } from "@fontra/core/backend-api.js";
-import { loaderSpinner } from "@fontra/core/loader-spinner.js";
 
 // Initialize the web app
 async function initWebApp() {
@@ -143,11 +142,21 @@ window.deleteProject = async function(projectId) {
 };
 
 function showLoader(message = "Loading...") {
-  loaderSpinner.showLoaderSpinner(message);
+  const spinner = document.getElementById("global-loader-spinner");
+  if (spinner) {
+    spinner.style.display = "inherit";
+    // Optionally show message
+    if (message && message !== "Loading...") {
+      console.log(message);
+    }
+  }
 }
 
 function hideLoader() {
-  loaderSpinner.hideLoaderSpinner();
+  const spinner = document.getElementById("global-loader-spinner");
+  if (spinner) {
+    spinner.style.display = "none";
+  }
 }
 
 function showError(message) {
