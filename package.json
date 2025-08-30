@@ -25,7 +25,8 @@
     "src-js/views-applicationsettings",
     "src-js/views-editor",
     "src-js/views-fontinfo",
-    "src-js/views-fontoverview"
+    "src-js/views-fontoverview",
+    "src-js/webapp"
   ],
   "dependencies": {
     "@babel/preset-env": "^7.28.0",

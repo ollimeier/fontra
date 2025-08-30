@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Fontra Web App</title>
+    <link href="/css/shared.css" rel="stylesheet" />
+    <link href="/css/core.css" rel="stylesheet" />
+    <style>
+      .web-app-header {
+        text-align: center;
+        margin: 20px 0;
+      }
+      .web-app-header h1 {
+        margin: 10px 0;
+        color: var(--fontra-text-color);
+      }
+      .web-app-info {
+        background: var(--fontra-ui-light-color);
+        padding: 15px;
+        margin: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--fontra-ui-border-color);
+      }
+      .create-project-form {
+        background: var(--fontra-ui-dark-color);
+        padding: 20px;
+        margin: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--fontra-ui-border-color);
+      }
+      .form-group {
+        margin: 10px 0;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--fontra-text-color);
+      }
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--fontra-ui-border-color);
+        border-radius: 4px;
+        background: var(--fontra-ui-light-color);
+        color: var(--fontra-text-color);
+      }
+      .btn {
+        background: var(--fontra-accent-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      .btn:hover {
+        opacity: 0.9;
+      }
+      .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .projects-list {
+        margin: 20px;
+      }
+      .project-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        margin: 5px 0;
+        background: var(--fontra-ui-light-color);
+        border: 1px solid var(--fontra-ui-border-color);
+        border-radius: 4px;
+      }
+      .project-item:hover {
+        background: var(--fontra-ui-hover-color);
+      }
+      .error-message {
+        color: var(--fontra-error-color);
+        background: var(--fontra-error-bg-color);
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+        border: 1px solid var(--fontra-error-color);
+      }
+    </style>
+  </head>
+  <body class="landing-body">
+    <div id="global-loader-spinner"></div>
+
+    <div class="landing-content">
+      <div class="web-app-header">
+        <img src="/images/fontra-icon.svg" width="100" height="100" />
+        <h1>Fontra Web App</h1>
+        <p>Browser-based font editor with offline support</p>
+      </div>
+
+      <div class="web-app-info">
+        <h3>About this Web App</h3>
+        <p>This is a standalone version of Fontra that runs entirely in your browser. Your font projects are stored locally using IndexedDB and don't require a server connection.</p>
+        <p><strong>Features:</strong></p>
+        <ul>
+          <li>✅ Create and edit font projects offline</li>
+          <li>✅ Data stored locally in your browser</li>
+          <li>✅ Import and export font files</li>
+          <li>⚠️ Path operations require WebAssembly (coming soon)</li>
+        </ul>
+      </div>
+
+      <div class="create-project-form">
+        <h3>Create New Project</h3>
+        <div class="form-group">
+          <label for="project-name">Project Name:</label>
+          <input type="text" id="project-name" placeholder="My Font Project" />
+        </div>
+        <button class="btn" id="create-project-btn">Create Project</button>
+        <button class="btn" id="import-font-btn">Import Font File</button>
+        <input type="file" id="font-file-input" accept=".ufo,.designspace,.ttf,.otf,.woff,.woff2" style="display: none;" />
+      </div>
+
+      <div class="projects-list">
+        <h3>Your Projects</h3>
+        <div id="projects-container">
+          <p>Loading projects...</p>
+        </div>
+      </div>
+
+      <div id="error-container"></div>
+    </div>
+
+    <script>
+      // Set standalone mode flag
+      window.FONTRA_STANDALONE_MODE = true;
+    </script>
+    <script type="module" src="./webapp-start.js"></script>
+  </body>
+</html>
