@@ -2,6 +2,7 @@ import { getRemoteProxy } from "@fontra/core/remote.js";
 import { fetchJSON } from "./utils.js";
 import { StaticGlyph } from "./var-glyph.js";
 import { VarPackedPath } from "./var-path.js";
+import { IndexedDBBackend } from "./indexeddb-backend.js";
 /** @import { RemoteFont } from "remotefont" */
 
 /**
@@ -124,3 +125,34 @@ class PythonBackend extends AbstractBackend {
 }
 
 export const Backend = PythonBackend;
+
+// Export AbstractBackend so it can be extended
+export { AbstractBackend };
+
+/**
+ * Get the appropriate backend based on environment
+ * @param {string} [mode] - Force a specific backend mode ("server" or "indexeddb")
+ * @returns {typeof AbstractBackend} The backend class to use
+ */
+export function getBackend(mode = null) {
+  // Auto-detect based on environment if no mode specified
+  if (!mode) {
+    // Check if we're in standalone web app mode (no server)
+    if (typeof window !== 'undefined' && 
+        (window.location.protocol === 'file:' || 
+         !window.location.port || 
+         window.FONTRA_STANDALONE_MODE)) {
+      mode = "indexeddb";
+    } else {
+      mode = "server"; 
+    }
+  }
+  
+  switch (mode) {
+    case "indexeddb":
+      return IndexedDBBackend;
+    case "server":
+    default:
+      return PythonBackend;
+  }
+}

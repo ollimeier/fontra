@@ -1,0 +1,11 @@
+{
+  "name": "@fontra/webapp",
+  "version": "0.0.1",
+  "description": "Standalone Fontra web app with IndexedDB backend",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"No test specified for @fontra/webapp\""
+  },
+  "dependencies": {
+  }
+}
