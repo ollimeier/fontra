@@ -17,8 +17,6 @@ fn fontra_backend_rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     #[test]
     fn test_basic() {
         assert_eq!(2 + 2, 4);

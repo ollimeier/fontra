@@ -358,9 +358,9 @@ mod tests {
 
     #[test]
     fn test_parse_code_points() {
-        assert_eq!(parse_code_points("U+0041"), vec![0x41]);
-        assert_eq!(parse_code_points("U+0041,U+0042"), vec![0x41, 0x42]);
-        assert_eq!(parse_code_points(""), vec![]);
+        assert_eq!(parse_code_points("U+0041"), vec![0x41u32]);
+        assert_eq!(parse_code_points("U+0041,U+0042"), vec![0x41u32, 0x42u32]);
+        assert_eq!(parse_code_points(""), Vec::<u32>::new());
     }
 
     #[test]
