@@ -261,6 +261,12 @@ dist
 /icons/*.ttf
 /icons/*.woff2
 
+# Rust build artifacts
+rust-backend/target/
+rust-backend/Cargo.lock
+*.rlib
+*.rmeta
+
 # Local plugins
 src/fontra/localplugins/
 
